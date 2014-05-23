@@ -19,16 +19,41 @@ class: center, middle, inverse
 
 A New Server-side Component Architecture
 
-.footnote[By [Soares Chen](http://github.com/soareschen) (Ruo Fei)]
+![Quiver Icon](images/quiver-icon.png)
+
+.footnote[By [Soares Chen](http://github.com/soareschen)]
 
 ---
 layout: false
 
 # Introduction to Quiver
 
-- Component-based architecture for server-side applications
+.center[
+![Quiver Cover](images/quiver-cover.png)
+]
 
-- Implemented in JavaScript and Node.js
+- Component-based architecture
+
+- Server-side applications
+
+- Implemented in Node
+
+---
+
+# Coding in Quiver
+
+.center[
+![Quiver Craft](images/quiver-craft.png)
+]
+
+- Code organized as small and reusable components
+
+  - Functions with standardized signatures
+
+  - JSON-like component definition
+
+---
+# Related Works
 
 - Concepts and best practices other systems
 
@@ -37,12 +62,6 @@ layout: false
   - Unix Philosophy
 
   - Functional Programming
-
-- Code organized as small and reusable components
-
-  - Functions with standardized signatures
-
-  - JSON-like component definition
 
 ---
 # Architecture Overview
@@ -53,9 +72,7 @@ layout: false
 
 - Six layers of constructs
 
-- Each construct make use of previous layer constructs
-
-- Only stream handler and filter will be presented here
+- Current focus: stream handler and filter
 
 ---
 
@@ -91,41 +108,47 @@ exports.quiverComponents = [
 ]
 ```
 
-- Define a component of type Simple Handler
-
-- Component name as JS string with spaces
-
-- Ignore input stream (void), output text stream
-
-- Definition exported through Node's `module.exports`
-
 ---
 
 # Image Thumbnail Server
 
-- Use case
-  - Create a simple server to serve resized image files
+.left-column[
+- Create a simple HTTP server
+  
+  - Static image files
+
+  - Resize on the fly
 
 - Quiver's approach
+
   - Reuse existing components
 
-  - Components have no knowledge of images and thumbnails
+  - Code has no knowledge of image manipulation
+]
+
+.right-column[
+![Quiver back](images/quiver-back.png)
+]
 
 ---
 
-# Static File Server
+# Step #1: Static File Server
 
 .center[
 ![File Handler](images/file-handler.png)
 ]
 
-- First step: create a static file server
+- npm install `quiver-file-component`
 
-- Make use of `quiver-file-component` library
+- run `quiver file directory handler` component
 
-- Run out of the box using `quiver-server`
+---
 
-  - Wrapper tool to run a handler component as HTTP server
+# Quiver Server
+
+- npm install -g `quiver-server`
+
+- Wrapper tool to run a handler component as HTTP server
 
 ```bash
 $ quiver-server . --config ./config.js --main \
@@ -139,25 +162,32 @@ $ quiver-server . --config ./config.js --main \
 ![Image Conversion Pipeline](images/pipeline-1.png)
 ]
 
-- Perform image conversion by forming a stream pipeline
+- Form a image conversion pipeline
 
-- Define new component called `resize image handler`
+- Second component: `resize image handler`
 
-- Define pipeline as new component called `image thumbnail handler`
+- Whole pipeline as component: `image thumbnail handler`
 
 
 ---
-# Command Handler
+# ImageMagick
 
-- Resize image handler extends from `file convert command handler`
+- Image conversion not done in JS
 
-  - Make use of `quiver-command-component`
-
-- Handler wrapped around ImageMagick's `convert` command
+- Use ImageMagick's `convert` command
 
 ```bash
 $ convert in.jpg -resize 200 out.jpg
 ```
+
+---
+# Command Handler
+
+- npm install `quiver-command-component`
+
+- Resize image handler extends from `file convert command handler`
+
+- Generic handler for running any file conversion command
 
 - Handler perform implicit conversion
 
@@ -174,11 +204,7 @@ $ convert in.jpg -resize 200 out.jpg
 <img src="images/command-args.png" style="width:50%">
 ]
 
-- One more configuration needed for command handler
-
-  - Command to execute
-
-  - Order of command line parameters
+- Handler need to know how to execute command
 
 - Supply a `commandArgsExtractor` function to specify the command
 
@@ -190,18 +216,17 @@ $ convert in.jpg -resize 200 out.jpg
   name: 'demo resize image handler',
   type: 'stream handler',
   configOverride: {
-    commandArgsExtractor: imageResizeCommandArgsExtractor,
+    commandArgsExtractor: 
+      function(args, inFile, outFile) { ... },
   },
   resultContentType: 'image/jpeg',
   handler: 'quiver file convert command handler'
 }
 ```
 
-- New component extends from existing component
+- Customize existing component
 
-- Configuration altered through `configOverride`
-
-- Extended component now knows how to resize image stream
+- Supply custom configuration in `configOverride`
 
 ---
 # Pipeline Component
@@ -217,16 +242,10 @@ $ convert in.jpg -resize 200 out.jpg
 }
 ```
 
-- Define new component of type Stream Pipeline
-
-- Pipeline stages specified as component names
-
 ```bash
 $ quiver-server . --config ./config.js --main \
     'demo image thumbnail handler'
 ```
-
-- Component can run immediately using `quiver-server`
 
 ---
 
@@ -236,15 +255,17 @@ $ quiver-server . --config ./config.js --main \
 ![Filter](images/filter-1.png)
 ]
 
-- One issue remain for current pipeline
+- One issue remain
 
-  - Pipeline is executed repeatedly for each request
+  - Pipeline executed repeatedly
 
-- Quiver does not provide implicit optimization
+- Quiver has no implicit optimization
 
-- Filter is provided instead as a general solution
+- Filter is the general solution
 
-  - Extends existing handler and intercept its input/output
+  - Extends existing handler
+
+  - Intercept original input/output
 
 ---
 # Cache Filter
@@ -253,9 +274,7 @@ $ quiver-server . --config ./config.js --main \
 ![Filtered Pipeline](images/pipeline-2.png)
 ]
 
-- Apply cache filter to the entire pipeline
-
-- Result from pipeline is cached
+- Caching done outside the entire pipeline
 
 - Result cached based on `args.path`
 
@@ -278,13 +297,51 @@ $ quiver-server . --config ./config.js --main \
 }
 ```
 
-- Just 3 extra lines of code in component definition
+- npm install `quiver-cache-component`
 
-  - Filter is a subtype of middleware
+- 3 extra lines of code
 
-- Default Quiver memory cache filter works out of the box
+- Filter is a subtype of middleware
 
-  - Filter component available in `quiver-cache-component`
+---
+
+# Component Reuse
+
+- Advantage of Quiver
+
+  - Smaller components can be recombined and reused
+
+- Components run on both server and command line
+
+---
+
+# Image Resize
+
+- Resize command
+
+```bash
+$ quiver-command . --main 'demo resize image handler' \ 
+    < static/images/blue-hat.jpg > temp/out.jpg
+```
+
+- Resize server
+
+```bash
+$ quiver-server . --main 'demo resize image handler'
+
+$ curl http://localhost:8080 -X POST \
+    --data-binary @static/images/blue-hat.jpg > temp/out.jpg
+```
+
+---
+
+# Proxy Pipeline
+
+.center[
+![Proxy Pipeline](images/proxy-pipeline.png)
+]
+
+- Horizontal scaling
 
 ---
 
@@ -297,6 +354,14 @@ $ quiver-server . --config ./config.js --main \
 - Git + Compilation + CDN Cache
 
 - Remote API + Template + Permission
+
+---
+name: inverse
+class: center, middle, inverse
+
+# Full Demo
+
+http://github.com/quiverjs/demo/02-format-convert
 
 ---
 
@@ -312,21 +377,20 @@ $ quiver-server . --config ./config.js --main \
 
   - Dependency management
 
-
 ---
 
 # Thank you!
+
+.center[
+![Bring back quiver](images/bring-back-quiver.png)
+]
 
 - Slide available at http://quiverjs.github.io/slides-01
 
 - Quiver.js Homepage: http://quiverjs.org
 
-- Contact me at [soares.chen@gmail.com](mailto:soares.chen@gmail.com)
-
-- Slideshow created using [remark](http://github.com/gnab/remark)
-
     </textarea>
-    <script src="http://gnab.github.io/remark/downloads/remark-latest.min.js" type="text/javascript"></script>
+    <script src="remark-latest.min.js" type="text/javascript"></script>
     <script type="text/javascript">
       var hljs = remark.highlighter.engine;
     </script>

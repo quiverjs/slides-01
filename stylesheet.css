@@ -1,12 +1,24 @@
 
-@import url(http://fonts.googleapis.com/css?family=Droid+Serif);
-@import url(http://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+@font-face {
+  font-family: 'Droid Serif';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Droid Serif'), local('DroidSerif'), url(fonts/drof-serif.woff) format('woff');
+}
+
+@font-face {
+  font-family: 'Yanone Kaffeesatz';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Yanone Kaffeesatz Regular'), local('YanoneKaffeesatz-Regular'), url(fonts/yanone-kaffeesatz.woff) format('woff');
+}
 
 body {
   font-family: 'Droid Serif';
   font-size: 20px;
 }
 h1, h2, h3 {
+  text-align: center;
   font-family: 'Yanone Kaffeesatz';
   font-weight: 400;
   margin-bottom: 0;
@@ -39,7 +51,7 @@ code {
   font-size: 16px;
 }
 img {
-  max-width: 70%;
+  max-width: 80%;
 }
 .pull-left {
   float: left;
@@ -106,7 +118,6 @@ img {
 
 /* Two-column layout */
 .left-column {
-  color: #777;
   width: 60%;
   height: 92%;
   float: left;
