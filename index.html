@@ -150,6 +150,16 @@ exports.quiverComponents = [
 
 - Wrapper tool to run a handler component as HTTP server
 
+- Require a config.js or config.json file
+
+```javascript
+var path = require('path')
+
+module.exports = {
+  dirPath: path.join(__dirname, 'static')
+}
+```
+
 ```bash
 $ quiver-server . --config ./config.js --main \
     'quiver file directory handler'
@@ -179,6 +189,8 @@ $ quiver-server . --config ./config.js --main \
 ```bash
 $ convert in.jpg -resize 200 out.jpg
 ```
+
+- Doc: http://www.imagemagick.org/script/convert.php
 
 ---
 # Command Handler
