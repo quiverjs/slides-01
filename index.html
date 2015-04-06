@@ -8,10 +8,6 @@
     <link rel="stylesheet" href="stylesheet.css" type="text/css" />
   </head>
   <body>
-  <div id="languages">
-	<div id="eng-flag" onclick="redirect('eng')"></div>
-	<div id="esp-flag" onclick="redirect('esp')"></div>
-  </div>
     <textarea id="source">
 name: inverse
 layout: true
@@ -421,14 +417,6 @@ http://github.com/quiverjs/demo/02-format-convert
           highlightStyle: 'monokai',
           highlightLanguage: 'remark'
         }) ;
-	function redirect(flag)
-	{
-		var num = location.href.substr(location.href.indexOf("#")+1,2);
-		if(flag == "esp")
-			location.href = "index-es.html#"+num;
-		else
-			location.href = "index.html#"+num;
-	}
     </script>
   </body>
 </html>
