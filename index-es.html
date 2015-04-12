@@ -21,7 +21,7 @@ class: center, middle, inverse
 
 #Quiver.js
 
-A New Server-side Component Architecture
+Un nuevo Componente de Arquitectura Server-Side
 
 ![Quiver Icon](images/quiver-icon.png)
 
@@ -29,58 +29,57 @@ A New Server-side Component Architecture
 
 ---
 layout: false
-
-# Introduction to Quiver
+# Introducción a Quiver
 
 .center[
 ![Quiver Cover](images/quiver-model.jpg)
 ]
 
-- Component-based architecture
+- Arquitectura basada en componentes
 
-- Server-side applications
+- Aplicaciones de lado servidor(Server-Side))
 
-- Implemented in Node
+- Implementado en Nodo
 
 ---
 
-# Coding in Quiver
+# Codificando en Quiver
 
 .center[
 ![Quiver Craft](images/quiver-craft.png)
 ]
 
-- Code organized as small and reusable components
+- Código organizado como componentes pequeños y reutilizables
 
-  - Functions with standardized signatures
+  - Functiones con firmas estandarizadas
 
-  - JSON-like component definition
-
----
-# Related Works
-
-- Concepts and best practices other systems
-
-  - REST Architecture
-
-  - Unix Philosophy
-
-  - Functional Programming
+  - Definición de componentes como JSON
 
 ---
-# Architecture Overview
+# Trabajos relacionados
+
+- Conceptos y mejores practicas de otros sistemas
+
+  - Arquitectura REST
+
+  - Filosofía Unix
+
+  - Progamación funcional
+
+---
+# Descripción de la arquitectura
 
 .center[
 ![Architecture Layers](images/layers.png)
 ]
 
-- Six layers of constructs
+- Seis capas de contrucciones
 
-- Current focus: stream handler and filter
+- Enfoque actual : manipulador de flujo y el filtro
 
 ---
 
-# Stream Handler
+# Manipulador de Flujo
 
 .center[
 ![Stream Handler](images/stream-handler-1.png)
@@ -94,7 +93,7 @@ layout: false
 
 ---
 
-# Example Hello Handler
+# Ejemplo de 'Hola Mundo' evento
 
 ```javascript
 var helloHandler = function(args, callback) {
@@ -114,20 +113,20 @@ exports.quiverComponents = [
 
 ---
 
-# Image Thumbnail Server
+# Imagen en Miniatura de Servidor
 
 .left-column[
-- Create a simple HTTP server
+- Crear un servidor HTTP sencillo
   
-  - Static image files
+  - Archivos de imágenes estáticas
 
-  - Resize on the fly
+  - Cambia el tamaño sobre la marcha
 
 - Quiver's approach
 
-  - Reuse existing components
+  - Vuelve a usar componentes existentes
 
-  - Code has no knowledge of image manipulation
+  - Código no tiene conocimiento de la manipulación de imágenes
 ]
 
 .right-column[
@@ -136,7 +135,7 @@ exports.quiverComponents = [
 
 ---
 
-# Step #1: Static File Server
+# Paso #1: Archivo Estatico del Servidor
 
 .center[
 ![File Handler](images/file-handler.png)
@@ -153,6 +152,16 @@ exports.quiverComponents = [
 - npm install -g `quiver-server`
 
 - Wrapper tool to run a handler component as HTTP server
+
+- Require a config.js or config.json file
+
+```javascript
+var path = require('path')
+
+module.exports = {
+  dirPath: path.join(__dirname, 'static')
+}
+```
 
 ```bash
 $ quiver-server . --config ./config.js --main \
@@ -183,6 +192,8 @@ $ quiver-server . --config ./config.js --main \
 ```bash
 $ convert in.jpg -resize 200 out.jpg
 ```
+
+- Doc: http://www.imagemagick.org/script/convert.php
 
 ---
 # Command Handler
